@@ -1,0 +1,903 @@
+package sql2;
+
+import getset2.variables2;
+import java.sql.Connection;
+import javax.swing.JOptionPane;
+import java.sql.ResultSet;
+public class crudsql2 extends conexionsql2 {
+  java.sql.Statement st;
+  ResultSet rs;
+  variables2 var=new variables2();
+    
+    public void insertar(String Id_Poliza ,String nombre, String apellido, String cedula,
+    String Fnacimiento,String trabajo,String enfermedad, String direccion,String inicioseguro, String telefono, String ingresoa){
+        try{
+            Connection conexion=conectar();
+              st=conexion.createStatement();
+              String sql = insert into Asegurado(Id_Poliza ,Nombre_Asegurado,Apellido_Asegurado,Cedula_Asegurado ,fechaNacimiento_Asegurado,
+            + Trabajo_Asegurado,Enfermedades_Asegurado ,Direccion_Asegurado ,InicioSeguro_Asegurado,Telefono_Asegurado ,IngresoAnual_Asegurado) 
+            + values(' + Id_Poliza + ',' + nombre + ',' + apellido + ',' + cedula + ',' + Fnacimiento + ',' + trabajo + ',' 
+            + enfermedad + ',' + direccion +  ',+ ' + inicioseguro + ',' + telefono + ',' + ingresoa + ');;
+              
+              st.execute(sql);
+              st.close();
+              conexion.close();
+                JOptionPane.showMessageDialog(null, El registro se guardo correctamente, Mensaje,JOptionPane.INFORMATION_MESSAGE);
+        }catch(Exception e){
+             JOptionPane.showMessageDialog(null, El registro no se guardo correctamente+e, Mensaje,JOptionPane.ERROR_MESSAGE);
+            
+        }
+    }public void mostrar(String idasegurado){
+        try{
+            Connection conexion= conectar();
+               st = conexion.createStatement();
+               String sql=select  from Asegurado where Id_Asegurado='+idasegurado+';
+               rs=st.executeQuery(sql);
+               if(rs.next()){
+                   
+                   var.setIdpoliza(rs.getString(Id_Poliza));               
+                   var.setNombre(rs.getString(Nombre_Asegurado));
+                   var.setApellido(rs.getString(Apellido_Asegurado));
+                   var.setCedula(rs.getString(Cedula_Asegurado));
+                   var.setFnacimiento(rs.getString(fechaNacimiento_Asegurado));
+                   var.setTrabajo(rs.getString(Trabajo_Asegurado));
+                   var.setEnfermedades(rs.getString(Enfermedades_Asegurado));
+                   var.setDireccion(rs.getString(Direccion_Asegurado));
+                   var.setInicioseguro(rs.getString(Inicioseguro_Asegurado));
+                   var.setTelefono(rs.getString(Telefono_Asegurado));
+                   var.setIngreso(rs.getString(IngresoAnual_Asegurado));
+                   
+               }else {
+                   var.setIdpoliza();
+                   var.setNombre();
+                   var.setApellido();
+                   var.setCedula();
+                   var.setFnacimiento();
+                   var.setTrabajo();
+                   var.setEnfermedades();
+                   var.setDireccion();
+                   var.setInicioseguro();
+                   var.setTelefono();
+                   var.setIngreso();
+                   JOptionPane.showMessageDialog(null,No se encontró registro,Sin registro,JOptionPane.INFORMATION_MESSAGE);
+               }
+                
+               st.close();
+               conexion.close();
+        }catch(Exception e){
+         JOptionPane.showMessageDialog(null,Error en el sistema de busqueda,Error busqueda,JOptionPane.ERROR_MESSAGE);
+        }
+    
+    }public void actualizar (String Id_Poliza ,String nombre, String apellido, String cedula, String Fnacimiento,String trabajo,
+        String enfermedad, String direccion,String inicioseguro, String telefono, String ingresoa, String idasegurado){
+        try{
+        Connection conexion=conectar();
+        st=conexion.createStatement();
+        String sql=update Asegurado set Nombre_Asegurado='+nombre+',Apellido_Asegurado='+apellido+',Cedula_Asegurado='+cedula+' ,fechaNacimiento_Asegurado='+
+                Fnacimiento+',Trabajo_Asegurado='+trabajo+' ,Enfermedades_Asegurado='+enfermedad+' ,Direccion_Asegurado='+direccion+' ,InicioSeguro_Asegurado='+
+                inicioseguro+',Telefono_Asegurado='+telefono+' ,IngresoAnual_Asegurado='+ingresoa+' where Id_Asegurado='+idasegurado+';
+        st.executeUpdate(sql);
+        st.close();
+        conexion.close();
+        JOptionPane.showMessageDialog(null, El registro se actualizo , Exito,JOptionPane.INFORMATION_MESSAGE);
+    
+    }catch(Exception e){
+         JOptionPane.showMessageDialog(null, Error al actualizar+e, Error,JOptionPane.ERROR_MESSAGE);
+}
+    
+}public void eliminar(String idasegurado){
+    try{
+        Connection conexion=conectar();
+        st=conexion.createStatement();
+        String sql=delete from Asegurado where ID_Asegurado='+idasegurado+';;
+        st.executeUpdate(sql);
+        st.close();
+        conexion.close();
+          JOptionPane.showMessageDialog(null, Registro eliminado correctamente , Eliminado,JOptionPane.INFORMATION_MESSAGE);
+    }catch(Exception e){
+          JOptionPane.showMessageDialog(null, Error al eliminar registro+e, Error,JOptionPane.ERROR_MESSAGE);
+    }
+}
+}
+
+Conexion
+
+
+package sql2;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import javax.swing.JOptionPane;
+
+public class conexionsql2 {
+    Connection conn=null;
+    String url=jdbcpostgresqllocalhost5432aseguradoraP;
+    String usuario=postgres;
+    String clave=321108sm;
+    public Connection conectar(){
+        try{
+            Class.forName(org.postgresql.Driver);   esto es para que los drivers funcionen 
+            conn=DriverManager.getConnection(url,usuario,clave);
+            }catch(Exception e){
+            JOptionPane.showMessageDialog(null, Error al conectar+e,Error,JOptionPane.ERROR_MESSAGE);
+        }
+        return conn;
+        }
+    }
+
+
+Variables
+
+package getset2;
+
+public class variables2 {
+    private static String idpoliza;
+    private static String nombre;
+    private static String apellido;
+    private static String cedula;
+    private static String fnacimiento;
+    private static String trabajo;
+    private static String enfermedades;
+    private static String direccion;
+    private static String inicioseguro;
+    private static String telefono;
+    private static String ingreso;
+
+    public String getIdpoliza() {
+        return idpoliza;
+    }
+
+    public void setIdpoliza(String idpoliza) {
+        this.idpoliza = idpoliza;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getApellido() {
+        return apellido;
+    }
+
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
+    }
+
+    public String getCedula() {
+        return cedula;
+    }
+
+    public void setCedula(String cedula) {
+        this.cedula = cedula;
+    }
+
+    public String getFnacimiento() {
+        return fnacimiento;
+    }
+
+    public void setFnacimiento(String fnacimiento) {
+        this.fnacimiento = fnacimiento;
+    }
+
+    public String getTrabajo() {
+        return trabajo;
+    }
+
+    public void setTrabajo(String trabajo) {
+        this.trabajo = trabajo;
+    }
+
+    public String getEnfermedades() {
+        return enfermedades;
+    }
+
+    public void setEnfermedades(String enfermedades) {
+        this.enfermedades = enfermedades;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
+
+    public String getInicioseguro() {
+        return inicioseguro;
+    }
+
+    public void setInicioseguro(String inicioseguro) {
+        this.inicioseguro = inicioseguro;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
+
+    public String getIngreso() {
+        return ingreso;
+    }
+
+    public void setIngreso(String ingreso) {
+        this.ingreso = ingreso;
+    }
+
+}
+
+
+Mostrar
+package vistas2;
+
+import getset2.variables2;
+import sql2.crudsql2;
+
+
+ 
+  @author Mateo Párraga
+ 
+public class mostrar extends javax.swing.JFrame {
+
+    
+      Creates new form mostrar
+     
+    public mostrar() {
+        initComponents();
+    }
+
+    
+      This method is called from within the constructor to initialize the form.
+      WARNING Do NOT modify this code. The content of this method is always
+      regenerated by the Form Editor.
+     
+    @SuppressWarnings(unchecked)
+     editor-fold defaultstate=collapsed desc=Generated Code                          
+    private void initComponents() {
+
+        jLabel1 = new javax.swing.JLabel();
+        txtid = new javax.swing.JTextField();
+        btnbuscar = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        txtidpoliza = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        txtnombre = new javax.swing.JTextField();
+        txtapellido = new javax.swing.JTextField();
+        txtcedula = new javax.swing.JTextField();
+        txtfnacimiento = new javax.swing.JTextField();
+        txttrabajo = new javax.swing.JTextField();
+        txtenfermedad = new javax.swing.JTextField();
+        txtdireccion = new javax.swing.JTextField();
+        txtfechainicio = new javax.swing.JTextField();
+        txttelefono = new javax.swing.JTextField();
+        txtingreso = new javax.swing.JTextField();
+        btnregresar = new javax.swing.JButton();
+        btnactualizar = new javax.swing.JButton();
+        btneliminar = new javax.swing.JButton();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jLabel1.setText(Id asegurado);
+
+        btnbuscar.setText(Buscar);
+        btnbuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnbuscarActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setText(id poliza);
+
+        jLabel3.setText(Nombre asegurado);
+
+        jLabel4.setText(Apellido asegurado);
+
+        jLabel5.setText(Cédula);
+
+        jLabel6.setText(Fecha de nacimiento);
+
+        jLabel7.setText(Trabajo);
+
+        jLabel8.setText(Enfermedades);
+
+        jLabel9.setText(Dirección);
+
+        jLabel10.setText(Fecha de inicio);
+
+        jLabel11.setText(Teléfono );
+
+        jLabel12.setText(Ingreso anual);
+
+        txtfnacimiento.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtfnacimientoActionPerformed(evt);
+            }
+        });
+
+        txtfechainicio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtfechainicioActionPerformed(evt);
+            }
+        });
+
+        btnregresar.setText(Regresar);
+        btnregresar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnregresarActionPerformed(evt);
+            }
+        });
+
+        btnactualizar.setText(Actualizar);
+        btnactualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnactualizarActionPerformed(evt);
+            }
+        });
+
+        btneliminar.setText(Eliminar);
+        btneliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btneliminarActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(44, 44, 44)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnregresar)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel8)
+                            .addComponent(jLabel9)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel10)
+                            .addComponent(jLabel11)
+                            .addComponent(jLabel12)
+                            .addComponent(btnactualizar))
+                        .addGap(37, 37, 37)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(txtid, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnbuscar))
+                            .addComponent(txtidpoliza)
+                            .addComponent(txtnombre)
+                            .addComponent(txtapellido)
+                            .addComponent(txtcedula)
+                            .addComponent(txtfnacimiento)
+                            .addComponent(txttrabajo)
+                            .addComponent(txtenfermedad)
+                            .addComponent(txtdireccion)
+                            .addComponent(txtfechainicio)
+                            .addComponent(txttelefono)
+                            .addComponent(txtingreso)
+                            .addComponent(btneliminar))))
+                .addContainerGap(35, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(32, 32, 32)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(txtid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnbuscar))
+                .addGap(49, 49, 49)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(txtidpoliza, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(txtnombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(txtapellido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(txtcedula, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(txtfnacimiento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(txttrabajo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(txtenfermedad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(txtdireccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(txtfechainicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel11)
+                    .addComponent(txttelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel12)
+                    .addComponent(txtingreso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnactualizar)
+                    .addComponent(btneliminar))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 76, Short.MAX_VALUE)
+                .addComponent(btnregresar)
+                .addContainerGap())
+        );
+
+        pack();
+    } editor-fold                        
+
+    private void btnregresarActionPerformed(java.awt.event.ActionEvent evt) {                                            
+         TODO add your handling code here
+        guardar2 objguardar=new guardar2();
+        objguardar.setVisible(true);
+        objguardar.setLocationRelativeTo(null);
+        this.setVisible(false);
+    }                                           
+crudsql2 crud=new crudsql2 ();
+variables2 var=new variables2();
+
+    private void btnbuscarActionPerformed(java.awt.event.ActionEvent evt) {                                          
+         TODO add your handling code here
+        crud.mostrar(txtid.getText());
+        txtidpoliza.setText(var.getIdpoliza());
+        txtnombre.setText(var.getNombre());
+        txtapellido.setText(var.getApellido());
+        txtcedula.setText(var.getCedula());
+        txtfnacimiento.setText(var.getFnacimiento());
+        txttrabajo.setText(var.getTrabajo());
+        txtenfermedad.setText(var.getEnfermedades());
+        txtdireccion.setText(var.getDireccion());
+        txtfechainicio.setText(var.getInicioseguro());
+        txttelefono.setText(var.getTelefono());
+        txtingreso.setText(var.getIngreso());
+    }                                         
+
+    private void txtfechainicioActionPerformed(java.awt.event.ActionEvent evt) {                                               
+         TODO add your handling code here
+    }                                              
+
+    private void btnactualizarActionPerformed(java.awt.event.ActionEvent evt) {                                              
+        TODO add your handling code here
+         crudsql2 objcrud=new crudsql2();
+         variables2 objvar=new variables2();
+         objvar.setIdpoliza(txtidpoliza.getText());
+         objvar.setNombre(txtnombre.getText());
+         objvar.setApellido(txtapellido.getText());
+         objvar.setCedula(txtcedula.getText());
+         objvar.setFnacimiento(txtfnacimiento.getText());
+         objvar.setTrabajo(txttrabajo.getText());
+         objvar.setEnfermedades(txtenfermedad.getText());
+         objvar.setDireccion(txtdireccion.getText());
+         objvar.setInicioseguro(txtfechainicio.getText());
+         objvar.setTelefono(txttelefono.getText());
+         objvar.setIngreso(txtingreso.getText());
+       objcrud.actualizar(objvar.getIdpoliza(), objvar.getNombre(), objvar.getApellido(), objvar.getCedula(), objvar.getFnacimiento(), objvar.getTrabajo(), objvar.getEnfermedades(), objvar.getDireccion(),objvar.getInicioseguro(),objvar.getTelefono(),objvar.getIngreso(),txtid.getText());
+       
+       txtid.setText();
+       txtidpoliza.setText();
+       txtnombre.setText();
+       txtapellido.setText();
+       txtcedula.setText();
+       txtfnacimiento.setText();
+       txttrabajo.setText();
+       txtenfermedad.setText();
+       txtdireccion.setText();
+       txtfechainicio.setText();
+       txttelefono.setText();
+       txtingreso.setText();
+       
+       
+       
+       
+    }                                             
+
+    private void txtfnacimientoActionPerformed(java.awt.event.ActionEvent evt) {                                               
+         TODO add your handling code here
+    }                                              
+
+    private void btneliminarActionPerformed(java.awt.event.ActionEvent evt) {                                            
+         TODO add your handling code here
+        crudsql2 objcrud=new crudsql2 ();
+        variables2 objvar=new variables2();
+          objcrud.eliminar(txtid.getText());
+             
+       txtid.setText();
+       txtidpoliza.setText();
+       txtnombre.setText();
+       txtapellido.setText();
+       txtcedula.setText();
+       txtfnacimiento.setText();
+       txttrabajo.setText();
+       txtenfermedad.setText();
+       txtdireccion.setText();
+       txtfechainicio.setText();
+       txttelefono.setText();
+       txtingreso.setText();
+    }                                           
+
+    
+      @param args the command line arguments
+     
+    public static void main(String args[]) {
+         Set the Nimbus look and feel 
+        editor-fold defaultstate=collapsed desc= Look and feel setting code (optional) 
+         If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+          For details see httpdownload.oracle.comjavasetutorialuiswinglookandfeelplaf.html 
+         
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info  javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if (Nimbus.equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(mostrar.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(mostrar.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(mostrar.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(mostrar.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        editor-fold
+
+         Create and display the form 
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new mostrar().setVisible(true);
+            }
+        });
+    }
+
+     Variables declaration - do not modify                     
+    private javax.swing.JButton btnactualizar;
+    private javax.swing.JButton btnbuscar;
+    private javax.swing.JButton btneliminar;
+    private javax.swing.JButton btnregresar;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JTextField txtapellido;
+    private javax.swing.JTextField txtcedula;
+    private javax.swing.JTextField txtdireccion;
+    private javax.swing.JTextField txtenfermedad;
+    private javax.swing.JTextField txtfechainicio;
+    private javax.swing.JTextField txtfnacimiento;
+    private javax.swing.JTextField txtid;
+    private javax.swing.JTextField txtidpoliza;
+    private javax.swing.JTextField txtingreso;
+    private javax.swing.JTextField txtnombre;
+    private javax.swing.JTextField txttelefono;
+    private javax.swing.JTextField txttrabajo;
+     End of variables declaration                   
+}
+
+
+
+
+guardar
+
+package vistas2;
+
+import sql2.crudsql2;
+
+
+ 
+  @author Mateo Párraga
+ 
+public class guardar2 extends javax.swing.JFrame {
+
+    
+      Creates new form guardar2
+     
+    public guardar2() {
+        initComponents();
+    }
+
+    
+      This method is called from within the constructor to initialize the form.
+      WARNING Do NOT modify this code. The content of this method is always
+      regenerated by the Form Editor.
+     
+    @SuppressWarnings(unchecked)
+    crudsql2 objcrud=new crudsql2();
+     editor-fold defaultstate=collapsed desc=Generated Code                          
+    private void initComponents() {
+
+        jLabel1 = new javax.swing.JLabel();
+        txtidpoliza = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        txtnombre = new javax.swing.JTextField();
+        txtapellido = new javax.swing.JTextField();
+        txtcedula = new javax.swing.JTextField();
+        txtfnacimiento = new javax.swing.JTextField();
+        txttrabajo = new javax.swing.JTextField();
+        txtenfermedad = new javax.swing.JTextField();
+        txtdireccion = new javax.swing.JTextField();
+        txtfechainicio = new javax.swing.JTextField();
+        txttelefono = new javax.swing.JTextField();
+        txtingreso = new javax.swing.JTextField();
+        btnguardar = new javax.swing.JButton();
+        btnsiguiente = new javax.swing.JButton();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jLabel1.setText(Id poliza);
+
+        jLabel2.setText(Nombre del asegurado);
+
+        jLabel3.setText(Apellido del asegurado);
+
+        jLabel4.setText(Número de cédula);
+
+        jLabel5.setText(Fecha de nacimiento);
+
+        jLabel6.setText(Trabajo);
+
+        jLabel7.setText(Enfermedad);
+
+        jLabel8.setText(Dirección);
+
+        jLabel9.setText(Fecha de inicio del seguro);
+
+        jLabel10.setText(Teléfono );
+
+        jLabel11.setText(Ingreso anual);
+
+        txttrabajo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txttrabajoActionPerformed(evt);
+            }
+        });
+
+        btnguardar.setText(Guardar);
+        btnguardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnguardarActionPerformed(evt);
+            }
+        });
+
+        btnsiguiente.setText(Siguiente);
+        btnsiguiente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnsiguienteActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(54, 54, 54)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 119, Short.MAX_VALUE)
+                        .addComponent(txtidpoliza, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel9)
+                            .addComponent(jLabel8)
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel11)
+                            .addComponent(jLabel10))
+                        .addGap(18, 18, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnguardar)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(txtnombre)
+                                .addComponent(txtapellido)
+                                .addComponent(txtcedula)
+                                .addComponent(txtfnacimiento)
+                                .addComponent(txttrabajo)
+                                .addComponent(txtenfermedad)
+                                .addComponent(txtdireccion)
+                                .addComponent(txtfechainicio)
+                                .addComponent(txttelefono)
+                                .addComponent(txtingreso, javax.swing.GroupLayout.DEFAULT_SIZE, 259, Short.MAX_VALUE)))))
+                .addGap(31, 31, 31))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnsiguiente)
+                .addGap(21, 21, 21))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(84, 84, 84)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(txtidpoliza, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(txtnombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(txtapellido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(txtcedula, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(txtfnacimiento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(txttrabajo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(txtenfermedad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(txtdireccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(txtfechainicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(txttelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel11)
+                    .addComponent(txtingreso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(btnguardar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnsiguiente)
+                .addContainerGap())
+        );
+
+        pack();
+    } editor-fold                        
+
+    private void txttrabajoActionPerformed(java.awt.event.ActionEvent evt) {                                           
+         TODO add your handling code here
+    }                                          
+
+    private void btnguardarActionPerformed(java.awt.event.ActionEvent evt) {                                           
+         TODO add your handling code here
+        objcrud.insertar(txtidpoliza.getText(),txtnombre.getText(),txtapellido.getText(),txtcedula.getText(),txtfnacimiento.getText(),txttrabajo.getText(),txtenfermedad.getText(),txtdireccion.getText(),txtfechainicio.getText(),txttelefono.getText(),txtingreso.getText());
+                                           
+
+    }                                          
+
+    private void btnsiguienteActionPerformed(java.awt.event.ActionEvent evt) {                                             
+         TODO add your handling code here
+        mostrar objmostrar=new mostrar();
+        objmostrar.setVisible(true);
+        objmostrar.setLocationRelativeTo(null);
+        this.setVisible(false);
+    }                                            
+
+    
+      @param args the command line arguments
+     
+    public static void main(String args[]) {
+         Set the Nimbus look and feel 
+        editor-fold defaultstate=collapsed desc= Look and feel setting code (optional) 
+         If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+          For details see httpdownload.oracle.comjavasetutorialuiswinglookandfeelplaf.html 
+         
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info  javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if (Nimbus.equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(guardar2.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(guardar2.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(guardar2.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(guardar2.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        editor-fold
+
+         Create and display the form 
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new guardar2().setVisible(true);
+            }
+        });
+    }
+
+     Variables declaration - do not modify                     
+    private javax.swing.JButton btnguardar;
+    private javax.swing.JButton btnsiguiente;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JTextField txtapellido;
+    private javax.swing.JTextField txtcedula;
+    private javax.swing.JTextField txtdireccion;
+    private javax.swing.JTextField txtenfermedad;
+    private javax.swing.JTextField txtfechainicio;
+    private javax.swing.JTextField txtfnacimiento;
+    private javax.swing.JTextField txtidpoliza;
+    private javax.swing.JTextField txtingreso;
+    private javax.swing.JTextField txtnombre;
+    private javax.swing.JTextField txttelefono;
+    private javax.swing.JTextField txttrabajo;
+     End of variables declaration                   
+}
