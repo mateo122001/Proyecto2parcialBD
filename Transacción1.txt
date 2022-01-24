@@ -1,0 +1,69 @@
+package sqlT;
+import getsetT.variablesT;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+import java.sql.ResultSet;
+public class crudsqlT {
+    java.sql.Statement st;
+    ResultSet rs;
+    conexionsqlT con =new  conexionsqlT();
+     variablesT var=new variablesT();
+    public void transaccion(String IdPoliza,String Idasegurado,String FechaAdquisicion) throws SQLException{
+        Connection conexion=con.conectar();
+     
+         //int a=rs.getInt("stock_Poliza");
+ 
+        String sql1 = "insert into Asegurado(Id_Asegurado,Id_Poliza)values('" + Idasegurado + "','" + IdPoliza + "');";
+    //  String sql2 = "insert into Poliza(Id_Poliza,Id_Aseguradora)values('" + IdPoliza + "','" + Idaseguradora + "');";
+        String sql3 = "insert into Detalle_adquisicion(Id_Poliza,Id_Asegurado,Fecha_adquisicion)values('" + IdPoliza + "','"
+        + Idasegurado + "','" + FechaAdquisicion + "');";
+   
+                   
+        conexion.setAutoCommit(false);            
+                     
+        try{
+        PreparedStatement st1=conexion.prepareStatement(sql1);
+      //PreparedStatement st2=conexion.prepareStatement(sql2);
+        PreparedStatement st3=conexion.prepareStatement(sql3);
+        st1.executeUpdate();
+        st3.executeUpdate();
+        conexion.commit();
+            
+        JOptionPane.showMessageDialog(null, "Transacción exitosa", "Mensaje",JOptionPane.INFORMATION_MESSAGE);
+                
+        }catch(SQLException e){
+             conexion.rollback();
+             throw e;
+          
+        }
+    }
+    
+    
+public void tablatransaccion(String fecha){
+ 
+        try{
+                Connection conexion=con.conectar();
+               st = conexion.createStatement();
+               String sql="select * from Detalle_adquisicion where Fecha_adquisicion='"+fecha+"'";
+               rs=st.executeQuery(sql);
+               if(rs.next()){
+                   
+                  var.setIdasegurado(rs.getString("Id_Asegurado"));               
+                                     
+              }else {
+                   var.setIdasegurado("");
+   
+                   JOptionPane.showMessageDialog(null,"No se encontró registro","Sin registro",JOptionPane.INFORMATION_MESSAGE);
+               }
+                
+               st.close();
+               conexion.close();
+        }catch(Exception e){
+         JOptionPane.showMessageDialog(null,"Error en el sistema de busqueda","Error busqueda",JOptionPane.ERROR_MESSAGE);
+        }
+    
+}
+}
+  
