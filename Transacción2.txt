@@ -1,0 +1,77 @@
+package sqlT2;
+import getseT2.variablesT2;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+import java.sql.ResultSet;
+public class crudsqlT2 {
+    java.sql.Statement st;
+    ResultSet rs;
+    conexionsqlT2 con =new  conexionsqlT2();
+  variablesT2 var=new variablesT2();
+    public void transaccion2(String Idasegurado,String IdPoliza,String Idempleado,String idaseguradora,String Fecha) throws SQLException{
+         Connection conexion=con.conectar();
+               
+         
+         String sql1 = "insert into Asegurado(Id_Asegurado,Id_Poliza)values('" + Idasegurado + "','" + IdPoliza + "');";
+         String sql2 = "insert into Empleado(Id_Empleado,Id_Aseguradora)values('" + Idempleado + "','" + idaseguradora + "');";
+         String sql3 = "insert into Detalle_Atencion(Id_Empleado,Id_Asegurado,Fecha_Atencion)values('" + Idempleado + "','" + Idasegurado 
+         + "','" + Fecha + "');";
+   
+                   
+              conexion.setAutoCommit(false);            
+                     
+        try{
+        PreparedStatement st1=conexion.prepareStatement(sql1);
+        PreparedStatement st2=conexion.prepareStatement(sql2);
+        PreparedStatement st3=conexion.prepareStatement(sql3);
+        st1.executeUpdate();
+        st2.executeUpdate();
+        st3.executeUpdate();
+        conexion.commit();
+            
+                JOptionPane.showMessageDialog(null, "Transacción exitosa", "Mensaje",JOptionPane.INFORMATION_MESSAGE);
+                
+        }catch(SQLException e){
+             conexion.rollback();
+             throw e;
+          
+          
+        }
+    }
+    
+        public void tablatransaccion2(String fecha){
+ 
+        try{
+                Connection conexion=con.conectar();
+               st = conexion.createStatement();
+               String sql="select * from Detalle_Atencion where Fecha_Atencion='"+fecha+"'";
+               rs=st.executeQuery(sql);
+               if(rs.next()){
+                  var.setIdempleado(rs.getString("Id_Empleado"));
+                  var.setIdasegurado(rs.getString("Id_Asegurado"));  
+                   //var.setIdpoliza(rs.getString("Id_Poliza"));
+                  // var.setNombre(rs.getString("Nombre_Asegurado"));
+               
+                   //var.setIdaseguradora(rs.getString("Id_Aseguradora"));
+                   var.setFecha(rs.getString("Fecha_Atencion"));
+                   
+              }else {
+                   var.setIdasegurado("");
+                // var.setIdpoliza("");
+                   var.setIdempleado("");
+                // var.setIdaseguradora("");
+                   var.setFecha("");
+                // var.setNombre("");
+            
+                   JOptionPane.showMessageDialog(null,"No se encontró registro","Sin registro",JOptionPane.INFORMATION_MESSAGE);
+               }
+                
+               st.close();
+               conexion.close();
+        }catch(Exception e){
+         JOptionPane.showMessageDialog(null,"Error en el sistema de busqueda","Error busqueda",JOptionPane.ERROR_MESSAGE);
+        }
+    }
+}
